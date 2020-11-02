@@ -1,13 +1,13 @@
 package awsnetworking
 
 import (
-	awsnetworking "github.com/danielrive/awsnetworking/vpc"
+	awsnetworkingvpc "github.com/danielrive/awsnetworking/vpc"
 )
 
 func Createnetworking(name string, CIDR string) {
-	vpcinfo := awsnetworking.Vpcinfo{
+	vpcinfo := awsnetworkingvpc.Vpcinfo{
 		name,
 		CIDR,
 	}
-	awsnetworking.Createvpc(vpcinfo)
+	awsnetworkingvpc.Createvpc(vpcinfo)
 }
