@@ -1,7 +1,7 @@
 package awsnetworking
 
 import (
-	"github.com/danielrive/awsnetworking"
+	awsnetworking "github.com/danielrive/awsnetworking/vpc"
 )
 
 func Createnetworking(name string, CIDR string) {
