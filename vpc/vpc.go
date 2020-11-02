@@ -1,4 +1,4 @@
-package awsnetworking
+package vpc
 
 import (
 	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/ec2"
