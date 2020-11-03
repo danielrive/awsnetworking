@@ -15,7 +15,7 @@ type Vpcinfo struct {
 // Create vpc with route public and private route tables, internet gateway and NAT GW (optional)
 func Createvpc(info Vpcinfo) {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		vpc, err := ec2.NewVpc(ctx, info.Name, &ec2.VpcArgs{
+		vpc, errvpc := ec2.NewVpc(ctx, info.Name, &ec2.VpcArgs{
 			CidrBlock:          pulumi.String(info.CIDR),
 			EnableDnsHostnames: pulumi.BoolPtr(true),
 			EnableDnsSupport:   pulumi.BoolPtr(true),
@@ -24,30 +24,31 @@ func Createvpc(info Vpcinfo) {
 				"CreatedBu4y": pulumi.String("Pulumi"),
 			},
 		})
-		if err != nil {
-			return err
+
+		if errvpc != nil {
+			return errvpc
 		}
 
 		//creating Internet GW
-		IGW, err := ec2.NewInternetGateway(ctx, "IGW"+info.Name, &ec2.InternetGatewayArgs{
-			VpcId: pulumi.String(vpc.Id),
+		IGW, errigw := ec2.NewInternetGateway(ctx, "IGW"+info.Name, &ec2.InternetGatewayArgs{
+			VpcId: vpc.ID(),
 			Tags: pulumi.StringMap{
 				"Name":        pulumi.String("IGW" + info.Name),
 				"CreatedBu4y": pulumi.String("Pulumi"),
 			},
 		})
-		if err != nil {
-			return err
+		if errigw != nil {
+			return errigw
 		}
 
 		// Creating Route tables, public and private
 
-		_, err := ec2.NewRouteTable(ctx, "PublicRT"+info.Name, &ec2.RouteTableArgs{
-			VpcId: pulumi.String(vpc.Id),
+		_, errrt := ec2.NewRouteTable(ctx, "PublicRT"+info.Name, &ec2.RouteTableArgs{
+			VpcId: vpc.ID(),
 			Routes: ec2.RouteTableRouteArray{
 				&ec2.RouteTableRouteArgs{
 					CidrBlock: pulumi.String("0.0.0.0/0"),
-					GatewayId: pulumi.String(IGW.Id),
+					GatewayId: IGW.ID(),
 				},
 			},
 			Tags: pulumi.StringMap{
@@ -55,9 +56,9 @@ func Createvpc(info Vpcinfo) {
 				"CreatedBu4y": pulumi.String("Pulumi"),
 			},
 		})
-		if err != nil {
-			return err
+		if errrt != nil {
+			return errrt
 		}
-
+		return nil
 	})
 }
